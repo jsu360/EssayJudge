@@ -19,7 +19,7 @@ Scoring Capabilities of Multimodal Large Language Models
 * **[2025/05/21]** 🚀 EssayJudge source code and dataset released!
 
 ## 🎯 Overview
-## 🔍 What is EssayJudge?
+### 🔍 What is EssayJudge?
 
 We propose **EssayJudge**, the **first multimodal benchmark for assessing the multi-granular Automated Essay Scoring (AES) capabilities of Multimodal Large Language Models (MLLMs)**.
 
