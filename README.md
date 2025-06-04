@@ -15,6 +15,7 @@ Scoring Capabilities of Multimodal Large Language Models
 </h5>
 
 ## 📣 News
+* **[2025/06/4]** 🌐 [EssayJudge Webpage](https://jsu360.github.io/EssayJudge_html/) officially launched!
 * **[2025/05/21]** 🥳 [CAFES](https://arxiv.org/abs/2505.13965) released  — first multi-agent AES system based on EssayJudge!
 * **[2025/05/21]** 🚀 EssayJudge source code and dataset released!
 * **[2025/5/16]** 🎉🎉🎉 EssayJudge has been accepted by ACL Findings 2025.
