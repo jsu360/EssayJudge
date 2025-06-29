@@ -33,10 +33,8 @@ def process_row(row):
         {
             "role": "User",
             "content": f"""
-                Essay title: "{row['Question']}"
-                Student's essay: "{row['Essay']}"
                 Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
                 [Rubric]: 
                     5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
                     4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
@@ -44,11 +42,14 @@ def process_row(row):
                     2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
                     1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
                     0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
-                    Please output only the number of the score (e.g. 5)：
+                Below is the reference content:
+                image: "{image_url}"
+                Essay title: "{row['Question']}"
+                Student's essay: "{row['Essay']}"
+                Please output only the number of the score (e.g. 5):
             """,
-            "images": [image_url],  # Use the image URL here
-        },
-        {"role": "Assistant", "content": ""},
+            "images": [image_url]
+        }
     ]
 
     # Load image and prepare inputs
@@ -69,7 +70,7 @@ def process_row(row):
         pad_token_id=tokenizer.eos_token_id,
         bos_token_id=tokenizer.bos_token_id,
         eos_token_id=tokenizer.eos_token_id,
-        max_new_tokens=512,
+        max_new_tokens=1500,
         do_sample=False,
         use_cache=True
     )

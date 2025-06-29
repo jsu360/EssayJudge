@@ -44,9 +44,6 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
 
     # Create the text prompt
     text = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the lexical diversity in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -56,7 +53,11 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
                     2 - Vocabulary is fairly limited, with a lot of repetition and restricted word choice. 
                     1 - Vocabulary is very limited, with frequent repetition and an extremely narrow range of words. 
                     0 - Vocabulary is monotonous, with almost no variation, failing to demonstrate vocabulary diversity.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
     query = f'<image>\n{text}'
 
@@ -71,7 +72,7 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
     try:
         with torch.inference_mode():
             gen_kwargs = dict(
-                max_new_tokens=1024,
+                max_new_tokens=1500,
                 do_sample=False,
                 top_p=None,
                 top_k=None,

@@ -18,7 +18,7 @@ tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-V-2_6', trust_remote_
 
 # 定义生成配置
 generation_config = {
-    "max_new_tokens": 50,  # 最大生成的 token 数
+    "max_new_tokens": 1500,  # 最大生成的 token 数
     "do_sample": False,    # 是否使用采样
     "temperature": 0.1     # 温度值（控制输出的多样性）
 }
@@ -71,11 +71,8 @@ def process_data(row, max_retries=10):
 
             # 定义prompt
             prompt = f"""
-            image: "{graph}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the clarity of the argument in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]:
                     5 - The central argument is clear, and the first paragraph clearly outlines the topic of the image and question, providing guidance with no ambiguity.
                     4 - The central argument is clear, and the first paragraph mentions the topic of the image and question, but the guidance is slightly lacking or the expression is somewhat vague.
@@ -83,7 +80,11 @@ def process_data(row, max_retries=10):
                     2 - The argument is unclear, the description is vague or incomplete, and it doesn't guide the essay.
                     1 - The argument is vague, and the first paragraph fails to effectively summarize the topic of the image or question.
                     0 - No central argument is presented, or the essay completely deviates from the topic and image.
-                    Please output only the number of the score (e.g. 5):
+            Below is the reference content:
+            image: "{graph}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
             """
 
             # 生成图像描述并评分

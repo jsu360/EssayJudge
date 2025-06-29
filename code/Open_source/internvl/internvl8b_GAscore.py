@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True, use_fast
 # 预处理函数
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-generation_config = dict(max_new_tokens=2000, do_sample=False)
+generation_config = dict(max_new_tokens=1500, do_sample=False)
 
 def build_transform(input_size):
     MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
@@ -103,19 +103,20 @@ for idx, row in tqdm(data_feishu.iterrows(), total=len(data_feishu), desc="Proce
             pixel_values = load_image_from_url(graph, max_num=12).to(torch.bfloat16).cuda()
 
             prompt = f"""
+            Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
+                5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
+                4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
+                3 - Few grammatical errors, but more noticeable errors that affect understanding; simple sentences are accurate, but complex sentences frequently contain errors. 
+                2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
+                1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
+                0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
+            Below is the reference content:
             image: "{graph}"
             Essay title: "{question}"
             Student's essay: "{essay}"
-            Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-            [Rubric]: 
-                    5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
-                    4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
-                    3 - Few grammatical errors, but more noticeable errors that affect understanding; simple sentences are accurate, but complex sentences frequently contain errors. 
-                    2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
-                    1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
-                    0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
-                    Please output only the number of the score (e.g. 5)：
+            Please output only the number of the score (e.g. 5):
             """
 
             response = model.chat(tokenizer, pixel_values, prompt, generation_config)

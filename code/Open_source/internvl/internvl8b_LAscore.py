@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True, use_fast
 # 预处理函数
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-generation_config = dict(max_new_tokens=2000, do_sample=False)
+generation_config = dict(max_new_tokens=1500, do_sample=False)
 
 def build_transform(input_size):
     MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
@@ -103,19 +103,20 @@ for idx, row in tqdm(data_feishu.iterrows(), total=len(data_feishu), desc="Proce
             pixel_values = load_image_from_url(graph, max_num=12).to(torch.bfloat16).cuda()
 
             prompt = f"""
+            Assume you are an IELTS examiner. You need to score the lexical accuracy in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
+                5 - Vocabulary is accurately chosen, with correct meanings and spelling, and minimal errors; words are used precisely to convey the intended meaning. 
+                4 - Vocabulary is generally accurate, with occasional slight meaning errors or minor spelling mistakes, but they do not affect overall understanding; words are fairly precise. 
+                3 - Vocabulary is mostly correct, but frequent minor errors or spelling mistakes affect some expressions; word choice is not fully precise. 
+                2 - Vocabulary is inaccurate, with significant meaning errors and frequent spelling mistakes, affecting understanding. 
+                1 - Vocabulary is severely incorrect, with unclear meanings and noticeable spelling errors, making comprehension difficult. 
+                0 - Vocabulary choice and spelling are completely incorrect, and the intended meaning is unclear or impossible to understand.
+            Below is the reference content:
             image: "{graph}"
             Essay title: "{question}"
             Student's essay: "{essay}"
-            Assume you are an IELTS examiner. You need to score the lexical accuracy in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-            [Rubric]: 
-                    5 - Vocabulary is accurately chosen, with correct meanings and spelling, and minimal errors; words are used precisely to convey the intended meaning. 
-                    4 - Vocabulary is generally accurate, with occasional slight meaning errors or minor spelling mistakes, but they do not affect overall understanding; words are fairly precise. 
-                    3 - Vocabulary is mostly correct, but frequent minor errors or spelling mistakes affect some expressions; word choice is not fully precise. 
-                    2 - Vocabulary is inaccurate, with significant meaning errors and frequent spelling mistakes, affecting understanding. 
-                    1 - Vocabulary is severely incorrect, with unclear meanings and noticeable spelling errors, making comprehension difficult. 
-                    0 - Vocabulary choice and spelling are completely incorrect, and the intended meaning is unclear or impossible to understand.
-                    Please output only the number of the score (e.g. 5)：
+            Please output only the number of the score (e.g. 5):
             """
 
             response = model.chat(tokenizer, pixel_values, prompt, generation_config)

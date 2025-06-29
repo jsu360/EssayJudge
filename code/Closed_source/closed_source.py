@@ -15,11 +15,8 @@ headers = {
 
 def ACscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the clarity of the argument in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]:
                     5 - The central argument is clear, and the first paragraph clearly outlines the topic of the image and question, providing guidance with no ambiguity.
                     4 - The central argument is clear, and the first paragraph mentions the topic of the image and question, but the guidance is slightly lacking or the expression is somewhat vague.
@@ -27,21 +24,29 @@ def ACscore(image_url, question, essay):
                     2 - The argument is unclear, the description is vague or incomplete, and it doesn't guide the essay.
                     1 - The argument is vague, and the first paragraph fails to effectively summarize the topic of the image or question.
                     0 - No central argument is presented, or the essay completely deviates from the topic and image.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
         "max_tokens": 1500
     }
+
     attempt = 0
     while attempt < 20:
         try:
@@ -62,11 +67,8 @@ ACscores = []
 
 def CHscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the coherence in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]:
                     5 - Transitions between sentences are natural, and logical connections flow smoothly; appropriate use of linking words and transitional phrases. 
                     4 - Sentences are generally coherent, with some transitions slightly awkward; linking words are used sparingly but are generally appropriate. 
@@ -74,21 +76,29 @@ def CHscore(image_url, question, essay):
                     2 - Logical connections are weak, sentence connections are awkward, and linking words are either used too little or excessively. 
                     1 - There is almost no logical connection between sentences, transitions are unnatural, and linking words are very limited or incorrect. 
                     0 - No coherence at all, with logical confusion between sentences.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
         "max_tokens": 1500
     }
+
     attempt = 0
     while attempt < 20:
         try:
@@ -109,11 +119,8 @@ CHscores = []
 
 def ELscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the essay length in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
                     5 - Word count is 150 words or more, with the content being substantial and without obvious excess or brevity. 
                     4 - Word count is around 150 words, but slightly off (within 10 words), and the content is complete. 
@@ -121,21 +128,29 @@ def ELscore(image_url, question, essay):
                     2 - Word count deviates significantly, failing to fully cover the requirements of the prompt. 
                     1 - Word count is far below the requirement, and the content is incomplete. 
                     0 - Word count is severely insufficient or excessive, making it impossible to meet the requirements of the prompt.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
         "max_tokens": 1500
     }
+
     attempt = 0
     while attempt < 20:
         try:
@@ -157,11 +172,8 @@ ELscores = []
 
 def GAscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
                     5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
                     4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
@@ -169,16 +181,22 @@ def GAscore(image_url, question, essay):
                     2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
                     1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
                     0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
-
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
@@ -205,11 +223,8 @@ GAscores = []
 
 def GDscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the grammatical diversity in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
                     5 - Uses a variety of sentence structures, including both simple and complex sentences, with flexible use of clauses and compound sentences, demonstrating rich sentence variation. 
                     4 - Generally uses a variety of sentence structures, with appropriate use of common clauses and compound sentences. Sentence structures vary, though some sentence types lack flexibility. 
@@ -217,16 +232,23 @@ def GDscore(image_url, question, essay):
                     2 - Sentence structures are simple, primarily relying on simple sentences, with occasional attempts at complex sentences, though errors occur frequently. 
                     1 - Sentence structures are very basic, with almost no complex sentences, and even simple sentences contain errors. 
                     0 - Only uses simple, repetitive sentences with no complex sentences, resulting in rigid sentence structures.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
@@ -252,12 +274,9 @@ def GDscore(image_url, question, essay):
 GDscores = []
 
 def JPscore(image_url, question, essay):
-    prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
+    prompt = f"""  
             Assume you are an IELTS examiner. You need to score the persuasiveness of the justifying in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]:
                     5 - Fully addresses and accurately analyzes all important information in the image and prompt (e.g., data turning points, trends); argumentation is in-depth and logically sound. 
                     4 - Addresses most of the important information in the image and prompt, with reasonable analysis but slight shortcomings; argumentation is generally logical. 
@@ -265,16 +284,23 @@ def JPscore(image_url, question, essay):
                     2 - Mentions a small amount of important information in the image and prompt, with simple or incorrect analysis; there are significant logical issues in the argumentation. 
                     1 - Only briefly mentions important information in the image and prompt or makes clear analytical errors, lacking reasonable reasoning. 
                     0 - Fails to mention key information from the image and prompt, lacks any argumentation, and is logically incoherent.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
@@ -300,9 +326,6 @@ JPscores = []
 
 def LAscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the lexical accuracy in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -312,16 +335,22 @@ def LAscore(image_url, question, essay):
                     2 - Vocabulary is inaccurate, with significant meaning errors and frequent spelling mistakes, affecting understanding. 
                     1 - Vocabulary is severely incorrect, with unclear meanings and noticeable spelling errors, making comprehension difficult. 
                     0 - Vocabulary choice and spelling are completely incorrect, and the intended meaning is unclear or impossible to understand.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
-
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
@@ -347,9 +376,6 @@ LAscores = []
 
 def LDscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the lexical diversity in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -359,16 +385,22 @@ def LDscore(image_url, question, essay):
                     2 - Vocabulary is fairly limited, with a lot of repetition and restricted word choice. 
                     1 - Vocabulary is very limited, with frequent repetition and an extremely narrow range of words. 
                     0 - Vocabulary is monotonous, with almost no variation, failing to demonstrate vocabulary diversity.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
-
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
@@ -394,9 +426,6 @@ LDscores = []
 
 def OSscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the organizational structure in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -406,16 +435,23 @@ def OSscore(image_url, question, essay):
                     2 - The structure is unclear, with improper paragraph divisions and poor logical coherence. 
                     1 - The paragraph structure is chaotic, with most paragraphs lacking clear topic sentences and disorganized content. 
                     0 - No paragraph structure, content is jumbled, and there is a complete lack of logical connections.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5)：
     """
 
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,
@@ -441,9 +477,6 @@ OSscores = []
 
 def PAscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the punctuation accuracy in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -453,16 +486,23 @@ def PAscore(image_url, question, essay):
                     2 - There are frequent punctuation errors, some of which affect understanding. 
                     1 - Punctuation errors are severe, significantly affecting comprehension. 
                     0 - Punctuation is completely incorrect or barely used, severely hindering understanding.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5)：
     """
 
     payload = {
-        "model": "",# Fill in the MLLM name
+        "model": "",  # Fill in the MLLM name
         "stream": False,
         "messages": [
             {
                 "role": "user",
-                "content": prompt
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
             }
         ],
         "temperature": 0,

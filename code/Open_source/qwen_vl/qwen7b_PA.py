@@ -20,17 +20,19 @@ def PAscore(graph_url, question, essay):
                 {
                     "type": "text",
                     "text": f"""
-                    Essay title: "{question}"
-                    Student's essay: "{essay}"
                     Assume you are an IELTS examiner. You need to score the punctuation accuracy in the student's essay.
                     Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
                     [Rubric]: 
-                    5 - Punctuation is used correctly throughout, adhering to standard rules with no errors. 
-                    4 - Punctuation is mostly correct, with occasional minor errors that do not affect understanding. 
-                    3 - Punctuation is generally correct, but there are some noticeable errors that slightly affect understanding. 
-                    2 - There are frequent punctuation errors, some of which affect understanding. 
-                    1 - Punctuation errors are severe, significantly affecting comprehension. 
-                    0 - Punctuation is completely incorrect or barely used, severely hindering understanding.
+                            5 - Punctuation is used correctly throughout, adhering to standard rules with no errors. 
+                            4 - Punctuation is mostly correct, with occasional minor errors that do not affect understanding. 
+                            3 - Punctuation is generally correct, but there are some noticeable errors that slightly affect understanding. 
+                            2 - There are frequent punctuation errors, some of which affect understanding. 
+                            1 - Punctuation errors are severe, significantly affecting comprehension. 
+                            0 - Punctuation is completely incorrect or barely used, severely hindering understanding.
+                    Below is the reference content:
+                    image: "{graph_url}"
+                    Essay title: "{question}"
+                    Student's essay: "{essay}"
                     Please output only the number of the score (e.g. 5)：
                     """
                 },

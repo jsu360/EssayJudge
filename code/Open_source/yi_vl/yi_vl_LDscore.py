@@ -71,7 +71,7 @@ def single_infer(model_path, image_url, question, conv_mode="mm_default", temper
             top_p=top_p,
             num_beams=num_beams,
             stopping_criteria=[stopping_criteria],
-            max_new_tokens=1024,
+            max_new_tokens=1500,
             use_cache=True,
         )
 
@@ -96,18 +96,20 @@ def batch_process(model_path, input_csv, output_csv):
             question = row["Question"]
             essay = row["Essay"]
             full_question = f"""
-            Essay title: "{question}"
-            Student's essay: "{essay}"
-                Assume you are an IELTS examiner. You need to score the lexical diversity in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-                [Rubric]: 
+            Assume you are an IELTS examiner. You need to score the lexical diversity in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
                     5 - Vocabulary is rich and diverse, with a wide range of words used flexibly, avoiding repetition. 
                     4 - Vocabulary diversity is good, with a broad range of word choices, occasional repetition, but overall flexible expression. 
                     3 - Vocabulary diversity is average, with some variety in word choice but limited, with frequent repetition. 
                     2 - Vocabulary is fairly limited, with a lot of repetition and restricted word choice. 
                     1 - Vocabulary is very limited, with frequent repetition and an extremely narrow range of words. 
                     0 - Vocabulary is monotonous, with almost no variation, failing to demonstrate vocabulary diversity.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
             """
 
             output = single_infer(

@@ -29,20 +29,22 @@ for index, row in tqdm(df.iterrows(), total=len(df), desc="Processing", ncols=10
                 "content": [
                     {"type": "text",
                      "text": f"""
-                            Essay title: "{question}"
-                            Student's essay: "{essay}"
-                            Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
-                            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-                            [Rubric]: 
-                                    5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
-                                    4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
-                                    3 - Few grammatical errors, but more noticeable errors that affect understanding; simple sentences are accurate, but complex sentences frequently contain errors. 
-                                    2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
-                                    1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
-                                    0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
-                                    Please output only the number of the score (e.g. 5)：
+                        Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
+                        Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+                        [Rubric]: 
+                            5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
+                            4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
+                            3 - Few grammatical errors, but more noticeable errors that affect understanding; simple sentences are accurate, but complex sentences frequently contain errors. 
+                            2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
+                            1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
+                            0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
+                        Below is the reference content:
+                        image: "{url}"
+                        Essay title: "{question}"
+                        Student's essay: "{essay}"
+                        Please output only the number of the score (e.g. 5):
                         """},
-                    {"type": "image"},
+                    {"type": "image", "image": image},
                 ],
             },
         ]
@@ -51,7 +53,7 @@ for index, row in tqdm(df.iterrows(), total=len(df), desc="Processing", ncols=10
 
         inputs = processor(images=image, text=prompt, return_tensors="pt").to(model.device)
 
-        output = model.generate(**inputs, max_new_tokens=100)
+        output = model.generate(**inputs, max_new_tokens=1500)
 
         output_text = processor.decode(output[0], skip_special_tokens=True)
         score = output_text.split()[-1]

@@ -20,18 +20,20 @@ def LDscore(graph_url, question, essay):
                 {
                     "type": "text",
                     "text": f"""
-                    Essay title: "{question}"
-                    Student's essay: "{essay}"
                     Assume you are an IELTS examiner. You need to score the lexical diversity in the student's essay.
                     Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
                     [Rubric]: 
-                    5 - Vocabulary is rich and diverse, with a wide range of words used flexibly, avoiding repetition. 
-                    4 - Vocabulary diversity is good, with a broad range of word choices, occasional repetition, but overall flexible expression. 
-                    3 - Vocabulary diversity is average, with some variety in word choice but limited, with frequent repetition. 
-                    2 - Vocabulary is fairly limited, with a lot of repetition and restricted word choice. 
-                    1 - Vocabulary is very limited, with frequent repetition and an extremely narrow range of words. 
-                    0 - Vocabulary is monotonous, with almost no variation, failing to demonstrate vocabulary diversity.
-                    Please output only the number of the score (e.g. 5)：
+                            5 - Vocabulary is rich and diverse, with a wide range of words used flexibly, avoiding repetition. 
+                            4 - Vocabulary diversity is good, with a broad range of word choices, occasional repetition, but overall flexible expression. 
+                            3 - Vocabulary diversity is average, with some variety in word choice but limited, with frequent repetition. 
+                            2 - Vocabulary is fairly limited, with a lot of repetition and restricted word choice. 
+                            1 - Vocabulary is very limited, with frequent repetition and an extremely narrow range of words. 
+                            0 - Vocabulary is monotonous, with almost no variation, failing to demonstrate vocabulary diversity.
+                    Below is the reference content:
+                    image: "{graph_url}"
+                    Essay title: "{question}"
+                    Student's essay: "{essay}"
+                    Please output only the number of the score (e.g. 5):
                     """
                 },
             ],

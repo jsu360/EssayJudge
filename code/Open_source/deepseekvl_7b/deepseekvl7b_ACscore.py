@@ -21,7 +21,6 @@ tokenizer = vl_chat_processor.tokenizer
 vl_gpt: MultiModalityCausalLM = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True)
 vl_gpt = vl_gpt.to(torch.bfloat16).cuda().eval()
 
-
 # Function to process each row and get the score
 def process_row(row):
     # Load the graph image from URL
@@ -33,22 +32,23 @@ def process_row(row):
         {
             "role": "User",
             "content": f"""
+                Assume you are an IELTS examiner. You need to score the clarity of the argument in the student's essay.
+                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+                [Rubric]:
+                    5 - The central argument is clear, and the first paragraph clearly outlines the topic of the image and question, providing guidance with no ambiguity.
+                    4 - The central argument is clear, and the first paragraph mentions the topic of the image and question, but the guidance is slightly lacking or the expression is somewhat vague.
+                    3 - The argument is generally clear, but the expression is vague, and it doesn't adequately guide the rest of the essay.
+                    2 - The argument is unclear, the description is vague or incomplete, and it doesn't guide the essay.
+                    1 - The argument is vague, and the first paragraph fails to effectively summarize the topic of the image or question.
+                    0 - No central argument is presented, or the essay completely deviates from the topic and image.
+                Below is the reference content:
+                image: "{image_url}"
                 Essay title: "{row['Question']}"
                 Student's essay: "{row['Essay']}"
-                Assume you are an IELTS examiner. You need to score the clarity of the argument in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-                [Rubric]:
-                        5 - The central argument is clear, and the first paragraph clearly outlines the topic of the image and question, providing guidance with no ambiguity.
-                        4 - The central argument is clear, and the first paragraph mentions the topic of the image and question, but the guidance is slightly lacking or the expression is somewhat vague.
-                        3 - The argument is generally clear, but the expression is vague, and it doesn't adequately guide the rest of the essay.
-                        2 - The argument is unclear, the description is vague or incomplete, and it doesn't guide the essay.
-                        1 - The argument is vague, and the first paragraph fails to effectively summarize the topic of the image or question.
-                        0 - No central argument is presented, or the essay completely deviates from the topic and image.
-                        Please output only the number of the score (e.g. 5):
+                Please output only the number of the score (e.g. 5):                      
             """,
             "images": [image_url],  # Use the image URL here
         },
-        {"role": "Assistant", "content": ""},
     ]
 
     # Load image and prepare inputs
@@ -69,7 +69,7 @@ def process_row(row):
         pad_token_id=tokenizer.eos_token_id,
         bos_token_id=tokenizer.bos_token_id,
         eos_token_id=tokenizer.eos_token_id,
-        max_new_tokens=512,
+        max_new_tokens=1500,
         do_sample=False,
         use_cache=True
     )

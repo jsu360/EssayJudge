@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True, use_fast
 # 预处理函数
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-generation_config = dict(max_new_tokens=2000, do_sample=False)
+generation_config = dict(max_new_tokens=1500, do_sample=False)
 
 def build_transform(input_size):
     MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
@@ -103,19 +103,20 @@ for idx, row in tqdm(data_feishu.iterrows(), total=len(data_feishu), desc="Proce
             pixel_values = load_image_from_url(graph, max_num=12).to(torch.bfloat16).cuda()
 
             prompt = f"""
+            Assume you are an IELTS examiner. You need to score the grammatical diversity in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
+                5 - Uses a variety of sentence structures, including both simple and complex sentences, with flexible use of clauses and compound sentences, demonstrating rich sentence variation. 
+                4 - Generally uses a variety of sentence structures, with appropriate use of common clauses and compound sentences. Sentence structures vary, though some sentence types lack flexibility. 
+                3 - Uses a variety of sentence structures, but with limited use of complex sentences, which often contain errors. Sentence variation is somewhat restricted. 
+                2 - Sentence structures are simple, primarily relying on simple sentences, with occasional attempts at complex sentences, though errors occur frequently. 
+                1 - Sentence structures are very basic, with almost no complex sentences, and even simple sentences contain errors. 
+                0 - Only uses simple, repetitive sentences with no complex sentences, resulting in rigid sentence structures.
+            Below is the reference content:
             image: "{graph}"
             Essay title: "{question}"
             Student's essay: "{essay}"
-            Assume you are an IELTS examiner. You need to score the grammatical diversity in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-            [Rubric]: 
-                    5 - Uses a variety of sentence structures, including both simple and complex sentences, with flexible use of clauses and compound sentences, demonstrating rich sentence variation. 
-                    4 - Generally uses a variety of sentence structures, with appropriate use of common clauses and compound sentences. Sentence structures vary, though some sentence types lack flexibility. 
-                    3 - Uses a variety of sentence structures, but with limited use of complex sentences, which often contain errors. Sentence variation is somewhat restricted. 
-                    2 - Sentence structures are simple, primarily relying on simple sentences, with occasional attempts at complex sentences, though errors occur frequently. 
-                    1 - Sentence structures are very basic, with almost no complex sentences, and even simple sentences contain errors. 
-                    0 - Only uses simple, repetitive sentences with no complex sentences, resulting in rigid sentence structures.
-                    Please output only the number of the score (e.g. 5)：
+            Please output only the number of the score (e.g. 5):
             """
 
             response = model.chat(tokenizer, pixel_values, prompt, generation_config)

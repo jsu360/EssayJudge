@@ -71,7 +71,7 @@ def single_infer(model_path, image_url, question, conv_mode="mm_default", temper
             top_p=top_p,
             num_beams=num_beams,
             stopping_criteria=[stopping_criteria],
-            max_new_tokens=1024,
+            max_new_tokens=1500,
             use_cache=True,
         )
 
@@ -96,18 +96,20 @@ def batch_process(model_path, input_csv, output_csv):
             question = row["Question"]
             essay = row["Essay"]
             full_question = f"""
-            Essay title: "{question}"
-            Student's essay: "{essay}"
-                Assume you are an IELTS examiner. You need to score the lexical accuracy in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-                [Rubric]: 
+            Assume you are an IELTS examiner. You need to score the lexical accuracy in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
                     5 - Vocabulary is accurately chosen, with correct meanings and spelling, and minimal errors; words are used precisely to convey the intended meaning. 
                     4 - Vocabulary is generally accurate, with occasional slight meaning errors or minor spelling mistakes, but they do not affect overall understanding; words are fairly precise. 
                     3 - Vocabulary is mostly correct, but frequent minor errors or spelling mistakes affect some expressions; word choice is not fully precise. 
                     2 - Vocabulary is inaccurate, with significant meaning errors and frequent spelling mistakes, affecting understanding. 
                     1 - Vocabulary is severely incorrect, with unclear meanings and noticeable spelling errors, making comprehension difficult. 
                     0 - Vocabulary choice and spelling are completely incorrect, and the intended meaning is unclear or impossible to understand.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
             """
 
             output = single_infer(

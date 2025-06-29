@@ -33,10 +33,8 @@ def process_row(row):
         {
             "role": "User",
             "content": f"""
-                Essay title: "{row['Question']}"
-                Student's essay: "{row['Essay']}"
                 Assume you are an IELTS examiner. You need to score the coherence in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
                 [Rubric]:
                     5 - Transitions between sentences are natural, and logical connections flow smoothly; appropriate use of linking words and transitional phrases. 
                     4 - Sentences are generally coherent, with some transitions slightly awkward; linking words are used sparingly but are generally appropriate. 
@@ -44,11 +42,14 @@ def process_row(row):
                     2 - Logical connections are weak, sentence connections are awkward, and linking words are either used too little or excessively. 
                     1 - There is almost no logical connection between sentences, transitions are unnatural, and linking words are very limited or incorrect. 
                     0 - No coherence at all, with logical confusion between sentences.
-                    Please output only the number of the score (e.g. 5)：
+                Below is the reference content:
+                image: "{image_url}"
+                Essay title: "{row['Question']}"
+                Student's essay: "{row['Essay']}"
+                Please output only the number of the score (e.g. 5):
             """,
-            "images": [image_url],  # Use the image URL here
-        },
-        {"role": "Assistant", "content": ""},
+            "images": [image_url]
+        }
     ]
 
     # Load image and prepare inputs
@@ -69,7 +70,7 @@ def process_row(row):
         pad_token_id=tokenizer.eos_token_id,
         bos_token_id=tokenizer.bos_token_id,
         eos_token_id=tokenizer.eos_token_id,
-        max_new_tokens=512,
+        max_new_tokens=1500,
         do_sample=False,
         use_cache=True
     )

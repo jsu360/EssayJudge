@@ -20,11 +20,8 @@ headers = {
 
 def CHscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the coherence in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]:
                     5 - Transitions between sentences are natural, and logical connections flow smoothly; appropriate use of linking words and transitional phrases. 
                     4 - Sentences are generally coherent, with some transitions slightly awkward; linking words are used sparingly but are generally appropriate. 
@@ -32,14 +29,24 @@ def CHscore(image_url, question, essay):
                     2 - Logical connections are weak, sentence connections are awkward, and linking words are either used too little or excessively. 
                     1 - There is almost no logical connection between sentences, transitions are unnatural, and linking words are very limited or incorrect. 
                     0 - No coherence at all, with logical confusion between sentences.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "llama-3.2-11b-vision-instruct",
+        "model": "llama-3.2-11b-vision-instruct",  # Fill in the MLLM name
         "stream": False,
         "messages": [
-            {"role": "user", "content": prompt}
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
+            }
         ],
         "temperature": 0,
         "max_tokens": 1500
@@ -61,11 +68,10 @@ def CHscore(image_url, question, essay):
             attempt += 1
             time.sleep(3)
         except KeyError:
-            print("解析响应时出错，无法找到评分结果")
+            print("error")
             return None
 
-    print("API 请求多次失败，返回 None")
-    return None
+        return None
 
 score_col = 'coherence(llama-3.2-11b-vision-instruct)'
 if score_col not in data.columns:

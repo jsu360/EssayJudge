@@ -33,10 +33,8 @@ def process_row(row):
         {
             "role": "User",
             "content": f"""
-                Essay title: "{row['Question']}"
-                Student's essay: "{row['Essay']}"
                 Assume you are an IELTS examiner. You need to score the essay length in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
                 [Rubric]: 
                     5 - Word count is 150 words or more, with the content being substantial and without obvious excess or brevity. 
                     4 - Word count is around 150 words, but slightly off (within 10 words), and the content is complete. 
@@ -44,11 +42,14 @@ def process_row(row):
                     2 - Word count deviates significantly, failing to fully cover the requirements of the prompt. 
                     1 - Word count is far below the requirement, and the content is incomplete. 
                     0 - Word count is severely insufficient or excessive, making it impossible to meet the requirements of the prompt.
-                    Please output only the number of the score (e.g. 5)：
+                Below is the reference content:
+                image: "{image_url}"
+                Essay title: "{row['Question']}"
+                Student's essay: "{row['Essay']}"
+                Please output only the number of the score (e.g. 5):
             """,
-            "images": [image_url],  # Use the image URL here
+            "images": [image_url]
         },
-        {"role": "Assistant", "content": ""},
     ]
 
     # Load image and prepare inputs
@@ -69,7 +70,7 @@ def process_row(row):
         pad_token_id=tokenizer.eos_token_id,
         bos_token_id=tokenizer.bos_token_id,
         eos_token_id=tokenizer.eos_token_id,
-        max_new_tokens=512,
+        max_new_tokens=1500,
         do_sample=False,
         use_cache=True
     )

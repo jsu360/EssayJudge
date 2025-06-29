@@ -20,11 +20,8 @@ headers = {
 
 def GAscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
                     5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
                     4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
@@ -32,14 +29,24 @@ def GAscore(image_url, question, essay):
                     2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
                     1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
                     0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "llama-3.2-11b-vision-instruct",
+        "model": "llama-3.2-11b-vision-instruct",  # Fill in the MLLM name
         "stream": False,
         "messages": [
-            {"role": "user", "content": prompt}
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
+            }
         ],
         "temperature": 0,
         "max_tokens": 1500

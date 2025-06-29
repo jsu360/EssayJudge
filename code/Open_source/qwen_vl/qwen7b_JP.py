@@ -20,18 +20,20 @@ def JPscore(graph_url, question, essay):
                 {
                     "type": "text",
                     "text": f"""
+                    Assume you are an IELTS examiner. You need to score the persuasiveness of the justifying in the student's essay.
+                    Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+                    [Rubric]:
+                            5 - Fully addresses and accurately analyzes all important information in the image and prompt (e.g., data turning points, trends); argumentation is in-depth and logically sound. 
+                            4 - Addresses most of the important information in the image and prompt, with reasonable analysis but slight shortcomings; argumentation is generally logical. 
+                            3 - Addresses some important information in the image and prompt, but analysis is insufficient; argumentation is somewhat weak. 
+                            2 - Mentions a small amount of important information in the image and prompt, with simple or incorrect analysis; there are significant logical issues in the argumentation. 
+                            1 - Only briefly mentions important information in the image and prompt or makes clear analytical errors, lacking reasonable reasoning. 
+                            0 - Fails to mention key information from the image and prompt, lacks any argumentation, and is logically incoherent.
+                    Below is the reference content:
+                    image: "{graph_url}"
                     Essay title: "{question}"
                     Student's essay: "{essay}"
-                    Assume you are an IELTS examiner. You need to score the persuasiveness of the justifying in the student's essay.
-                    Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-                    [Rubric]:
-                    5 - Fully addresses and accurately analyzes all important information in the image and prompt (e.g., data turning points, trends); argumentation is in-depth and logically sound. 
-                    4 - Addresses most of the important information in the image and prompt, with reasonable analysis but slight shortcomings; argumentation is generally logical. 
-                    3 - Addresses some important information in the image and prompt, but analysis is insufficient; argumentation is somewhat weak. 
-                    2 - Mentions a small amount of important information in the image and prompt, with simple or incorrect analysis; there are significant logical issues in the argumentation. 
-                    1 - Only briefly mentions important information in the image and prompt or makes clear analytical errors, lacking reasonable reasoning. 
-                    0 - Fails to mention key information from the image and prompt, lacks any argumentation, and is logically incoherent.
-                    Please output only the number of the score (e.g. 5)：
+                    Please output only the number of the score (e.g. 5):
                     """
                 },
             ],

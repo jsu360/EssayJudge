@@ -33,10 +33,8 @@ def process_row(row):
         {
             "role": "User",
             "content": f"""
-                Essay title: "{row['Question']}"
-                Student's essay: "{row['Essay']}"
                 Assume you are an IELTS examiner. You need to score the persuasiveness of the justifying in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
                 [Rubric]:
                     5 - Fully addresses and accurately analyzes all important information in the image and prompt (e.g., data turning points, trends); argumentation is in-depth and logically sound. 
                     4 - Addresses most of the important information in the image and prompt, with reasonable analysis but slight shortcomings; argumentation is generally logical. 
@@ -44,11 +42,14 @@ def process_row(row):
                     2 - Mentions a small amount of important information in the image and prompt, with simple or incorrect analysis; there are significant logical issues in the argumentation. 
                     1 - Only briefly mentions important information in the image and prompt or makes clear analytical errors, lacking reasonable reasoning. 
                     0 - Fails to mention key information from the image and prompt, lacks any argumentation, and is logically incoherent.
-                    Please output only the number of the score (e.g. 5)：
+                Below is the reference content:
+                image: "{image_url}"
+                Essay title: "{row['Question']}"
+                Student's essay: "{row['Essay']}"
+                Please output only the number of the score (e.g. 5):
             """,
-            "images": [image_url],  # Use the image URL here
-        },
-        {"role": "Assistant", "content": ""},
+            "images": [image_url]
+        }
     ]
 
     # Load image and prepare inputs
@@ -69,7 +70,7 @@ def process_row(row):
         pad_token_id=tokenizer.eos_token_id,
         bos_token_id=tokenizer.bos_token_id,
         eos_token_id=tokenizer.eos_token_id,
-        max_new_tokens=512,
+        max_new_tokens=1500,
         do_sample=False,
         use_cache=True
     )

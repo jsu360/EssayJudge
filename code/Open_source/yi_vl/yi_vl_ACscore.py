@@ -72,7 +72,7 @@ def single_infer(model_path, image_url, question, conv_mode="mm_default", temper
             top_p=top_p,
             num_beams=num_beams,
             stopping_criteria=[stopping_criteria],
-            max_new_tokens=1024,
+            max_new_tokens=1500,
             use_cache=True,
         )
 
@@ -98,10 +98,8 @@ def batch_process(model_path, input_csv, output_csv):
             question = row["Question"]
             essay = row["Essay"]
             full_question = f"""
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the clarity of the argument in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]:
                     5 - The central argument is clear, and the first paragraph clearly outlines the topic of the image and question, providing guidance with no ambiguity.
                     4 - The central argument is clear, and the first paragraph mentions the topic of the image and question, but the guidance is slightly lacking or the expression is somewhat vague.
@@ -109,7 +107,11 @@ def batch_process(model_path, input_csv, output_csv):
                     2 - The argument is unclear, the description is vague or incomplete, and it doesn't guide the essay.
                     1 - The argument is vague, and the first paragraph fails to effectively summarize the topic of the image or question.
                     0 - No central argument is presented, or the essay completely deviates from the topic and image.
-                    Please output only the number of the score (e.g. 5):
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
             """
 
             output = single_infer(

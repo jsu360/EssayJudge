@@ -20,11 +20,8 @@ headers = {
 
 def ELscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the essay length in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
                     5 - Word count is 150 words or more, with the content being substantial and without obvious excess or brevity. 
                     4 - Word count is around 150 words, but slightly off (within 10 words), and the content is complete. 
@@ -32,14 +29,24 @@ def ELscore(image_url, question, essay):
                     2 - Word count deviates significantly, failing to fully cover the requirements of the prompt. 
                     1 - Word count is far below the requirement, and the content is incomplete. 
                     0 - Word count is severely insufficient or excessive, making it impossible to meet the requirements of the prompt.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "llama-3.2-11b-vision-instruct",
+        "model": "llama-3.2-11b-vision-instruct",  # Fill in the MLLM name
         "stream": False,
         "messages": [
-            {"role": "user", "content": prompt}
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
+            }
         ],
         "temperature": 0,
         "max_tokens": 1500

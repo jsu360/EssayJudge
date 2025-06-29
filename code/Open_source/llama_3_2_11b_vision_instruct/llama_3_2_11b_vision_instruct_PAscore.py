@@ -20,9 +20,6 @@ headers = {
 
 def PAscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the punctuation accuracy in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -32,14 +29,24 @@ def PAscore(image_url, question, essay):
                     2 - There are frequent punctuation errors, some of which affect understanding. 
                     1 - Punctuation errors are severe, significantly affecting comprehension. 
                     0 - Punctuation is completely incorrect or barely used, severely hindering understanding.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5)：
     """
 
     payload = {
-        "model": "llama-3.2-11b-vision-instruct",
+        "model": "llama-3.2-11b-vision-instruct",  # Fill in the MLLM name
         "stream": False,
         "messages": [
-            {"role": "user", "content": prompt}
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
+            }
         ],
         "temperature": 0,
         "max_tokens": 1500

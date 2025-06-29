@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True, use_fast
 # 预处理函数
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-generation_config = dict(max_new_tokens=2000, do_sample=False)
+generation_config = dict(max_new_tokens=1500, do_sample=False)
 
 def build_transform(input_size):
     MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
@@ -103,20 +103,22 @@ for idx, row in tqdm(data_feishu.iterrows(), total=len(data_feishu), desc="Proce
             pixel_values = load_image_from_url(graph, max_num=12).to(torch.bfloat16).cuda()
 
             prompt = f"""
+            Assume you are an IELTS examiner. You need to score the punctuation accuracy in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
+                5 - Punctuation is used correctly throughout, adhering to standard rules with no errors. 
+                4 - Punctuation is mostly correct, with occasional minor errors that do not affect understanding. 
+                3 - Punctuation is generally correct, but there are some noticeable errors that slightly affect understanding. 
+                2 - There are frequent punctuation errors, some of which affect understanding. 
+                1 - Punctuation errors are severe, significantly affecting comprehension. 
+                0 - Punctuation is completely incorrect or barely used, severely hindering understanding.
+            Below is the reference content:
             image: "{graph}"
             Essay title: "{question}"
             Student's essay: "{essay}"
-            Assume you are an IELTS examiner. You need to score the punctuation accuracy in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-            [Rubric]: 
-                    5 - Punctuation is used correctly throughout, adhering to standard rules with no errors. 
-                    4 - Punctuation is mostly correct, with occasional minor errors that do not affect understanding. 
-                    3 - Punctuation is generally correct, but there are some noticeable errors that slightly affect understanding. 
-                    2 - There are frequent punctuation errors, some of which affect understanding. 
-                    1 - Punctuation errors are severe, significantly affecting comprehension. 
-                    0 - Punctuation is completely incorrect or barely used, severely hindering understanding.
-                    Please output only the number of the score (e.g. 5)：
+            Please output only the number of the score (e.g. 5):
             """
+
             response = model.chat(tokenizer, pixel_values, prompt, generation_config)
             score = response.strip()
 

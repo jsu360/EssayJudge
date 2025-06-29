@@ -20,9 +20,6 @@ headers = {
 
 def LDscore(image_url, question, essay):
     prompt = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the lexical diversity in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -32,14 +29,24 @@ def LDscore(image_url, question, essay):
                     2 - Vocabulary is fairly limited, with a lot of repetition and restricted word choice. 
                     1 - Vocabulary is very limited, with frequent repetition and an extremely narrow range of words. 
                     0 - Vocabulary is monotonous, with almost no variation, failing to demonstrate vocabulary diversity.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
 
     payload = {
-        "model": "llama-3.2-11b-vision-instruct",
+        "model": "llama-3.2-11b-vision-instruct",  # Fill in the MLLM name
         "stream": False,
         "messages": [
-            {"role": "user", "content": prompt}
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": image_url.strip()}},
+                    {"type": "text", "text": prompt}
+                ]
+            }
         ],
         "temperature": 0,
         "max_tokens": 1500

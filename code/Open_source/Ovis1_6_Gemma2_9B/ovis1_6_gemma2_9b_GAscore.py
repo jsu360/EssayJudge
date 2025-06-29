@@ -44,11 +44,8 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
 
     # Create the text prompt
     text = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the grammatical accuracy in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
                     5 - Sentence structure is accurate with no grammatical errors; both simple and complex sentences are error-free. 
                     4 - Sentence structure is generally accurate, with occasional minor errors that do not affect understanding; some errors in complex sentence structures. 
@@ -56,7 +53,11 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
                     2 - Numerous grammatical errors, with sentence structure affecting understanding; simple sentences are occasionally correct, but complex sentences have frequent errors. 
                     1 - A large number of grammatical errors, with sentence structure severely affecting understanding; sentence structure is unstable, and even simple sentences contain mistakes. 
                     0 - Sentence structure is completely incorrect, nonsensical, and difficult to understand.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
     query = f'<image>\n{text}'
 
@@ -71,7 +72,7 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
     try:
         with torch.inference_mode():
             gen_kwargs = dict(
-                max_new_tokens=1024,
+                max_new_tokens=1500,
                 do_sample=False,
                 top_p=None,
                 top_k=None,

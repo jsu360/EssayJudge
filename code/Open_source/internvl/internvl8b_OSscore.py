@@ -20,7 +20,7 @@ tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True, use_fast
 # 预处理函数
 IMAGENET_MEAN = (0.485, 0.456, 0.406)
 IMAGENET_STD = (0.229, 0.224, 0.225)
-generation_config = dict(max_new_tokens=2000, do_sample=False)
+generation_config = dict(max_new_tokens=1500, do_sample=False)
 
 def build_transform(input_size):
     MEAN, STD = IMAGENET_MEAN, IMAGENET_STD
@@ -103,19 +103,20 @@ for idx, row in tqdm(data_feishu.iterrows(), total=len(data_feishu), desc="Proce
             pixel_values = load_image_from_url(graph, max_num=12).to(torch.bfloat16).cuda()
 
             prompt = f"""
+            Assume you are an IELTS examiner. You need to score the organizational structure in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
+                5 - The essay has a well-organized structure, with clear paragraph divisions, each focused on a single theme. There are clear topic sentences and concluding sentences, and transitions between paragraphs are natural.
+                4 - The structure is generally reasonable, with fairly clear paragraph divisions, though transitions may be somewhat awkward and some paragraphs may lack clear topic sentences. 
+                3 - The structure is somewhat disorganized, with unclear paragraph divisions, a lack of topic sentences, or weak logical flow. 
+                2 - The structure is unclear, with improper paragraph divisions and poor logical coherence. 
+                1 - The paragraph structure is chaotic, with most paragraphs lacking clear topic sentences and disorganized content. 
+                0 - No paragraph structure, content is jumbled, and there is a complete lack of logical connections.
+            Below is the reference content:
             image: "{graph}"
             Essay title: "{question}"
             Student's essay: "{essay}"
-            Assume you are an IELTS examiner. You need to score the organizational structure in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-            [Rubric]: 
-                    5 - The essay has a well-organized structure, with clear paragraph divisions, each focused on a single theme. There are clear topic sentences and concluding sentences, and transitions between paragraphs are natural.
-                    4 - The structure is generally reasonable, with fairly clear paragraph divisions, though transitions may be somewhat awkward and some paragraphs may lack clear topic sentences. 
-                    3 - The structure is somewhat disorganized, with unclear paragraph divisions, a lack of topic sentences, or weak logical flow. 
-                    2 - The structure is unclear, with improper paragraph divisions and poor logical coherence. 
-                    1 - The paragraph structure is chaotic, with most paragraphs lacking clear topic sentences and disorganized content. 
-                    0 - No paragraph structure, content is jumbled, and there is a complete lack of logical connections.
-                    Please output only the number of the score (e.g. 5)：
+            Please output only the number of the score (e.g. 5):
             """
 
             response = model.chat(tokenizer, pixel_values, prompt, generation_config)

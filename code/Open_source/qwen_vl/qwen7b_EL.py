@@ -20,18 +20,20 @@ def ELscore(graph_url, question, essay):
                 {
                     "type": "text",
                     "text": f"""
+                    Assume you are an IELTS examiner. You need to score the essay length in the student's essay.
+                    Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
+                    [Rubric]: 
+                            5 - Word count is 150 words or more, with the content being substantial and without obvious excess or brevity. 
+                            4 - Word count is around 150 words, but slightly off (within 10 words), and the content is complete. 
+                            3 - Word count is noticeably too short or too long, and the content is not sufficiently substantial or is somewhat lengthy. 
+                            2 - Word count deviates significantly, failing to fully cover the requirements of the prompt. 
+                            1 - Word count is far below the requirement, and the content is incomplete. 
+                            0 - Word count is severely insufficient or excessive, making it impossible to meet the requirements of the prompt.
+                    Below is the reference content:
+                    image: "{graph_url}"
                     Essay title: "{question}"
                     Student's essay: "{essay}"
-                    Assume you are an IELTS examiner. You need to score the essay length in the student's essay.
-                    Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-                    [Rubric]: 
-                    5 - Word count is 150 words or more, with the content being substantial and without obvious excess or brevity. 
-                    4 - Word count is around 150 words, but slightly off (within 10 words), and the content is complete. 
-                    3 - Word count is noticeably too short or too long, and the content is not sufficiently substantial or is somewhat lengthy. 
-                    2 - Word count deviates significantly, failing to fully cover the requirements of the prompt. 
-                    1 - Word count is far below the requirement, and the content is incomplete. 
-                    0 - Word count is severely insufficient or excessive, making it impossible to meet the requirements of the prompt.
-                    Please output only the number of the score (e.g. 5)：
+                    Please output only the number of the score (e.g. 5):
                     """
                 },
             ],

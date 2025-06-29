@@ -71,7 +71,7 @@ def single_infer(model_path, image_url, question, conv_mode="mm_default", temper
             top_p=top_p,
             num_beams=num_beams,
             stopping_criteria=[stopping_criteria],
-            max_new_tokens=1024,
+            max_new_tokens=1500,
             use_cache=True,
         )
 
@@ -95,18 +95,20 @@ def batch_process(model_path, input_csv, output_csv):
             question = row["Question"]
             essay = row["Essay"]
             full_question = f"""
-            Essay title: "{question}"
-            Student's essay: "{essay}"
-                Assume you are an IELTS examiner. You need to score the punctuation accuracy in the student's essay.
-                Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
-                [Rubric]: 
+            Assume you are an IELTS examiner. You need to score the punctuation accuracy in the student's essay.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            [Rubric]: 
                     5 - Punctuation is used correctly throughout, adhering to standard rules with no errors. 
                     4 - Punctuation is mostly correct, with occasional minor errors that do not affect understanding. 
                     3 - Punctuation is generally correct, but there are some noticeable errors that slightly affect understanding. 
                     2 - There are frequent punctuation errors, some of which affect understanding. 
                     1 - Punctuation errors are severe, significantly affecting comprehension. 
                     0 - Punctuation is completely incorrect or barely used, severely hindering understanding.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5)：
             """
 
             output = single_infer(

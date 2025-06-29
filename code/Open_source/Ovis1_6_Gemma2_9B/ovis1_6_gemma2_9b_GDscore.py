@@ -44,11 +44,8 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
 
     # Create the text prompt
     text = f"""
-            image: "{image_url}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the grammatical diversity in the student's essay.
-            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
+            Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0–5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
                     5 - Uses a variety of sentence structures, including both simple and complex sentences, with flexible use of clauses and compound sentences, demonstrating rich sentence variation. 
                     4 - Generally uses a variety of sentence structures, with appropriate use of common clauses and compound sentences. Sentence structures vary, though some sentence types lack flexibility. 
@@ -56,7 +53,11 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
                     2 - Sentence structures are simple, primarily relying on simple sentences, with occasional attempts at complex sentences, though errors occur frequently. 
                     1 - Sentence structures are very basic, with almost no complex sentences, and even simple sentences contain errors. 
                     0 - Only uses simple, repetitive sentences with no complex sentences, resulting in rigid sentence structures.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{image_url}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
     """
     query = f'<image>\n{text}'
 
@@ -71,7 +72,7 @@ for index, row in tqdm(df.iterrows(), total=df.shape[0], desc="Processing", unit
     try:
         with torch.inference_mode():
             gen_kwargs = dict(
-                max_new_tokens=1024,
+                max_new_tokens=1500,
                 do_sample=False,
                 top_p=None,
                 top_k=None,

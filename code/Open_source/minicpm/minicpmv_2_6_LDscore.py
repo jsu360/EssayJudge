@@ -17,7 +17,7 @@ model = model.eval().cuda()
 tokenizer = AutoTokenizer.from_pretrained('openbmb/MiniCPM-V-2_6', trust_remote_code=True)
 
 generation_config = {
-    "max_new_tokens": 50,
+    "max_new_tokens": 1500,
     "do_sample": False,
     "temperature": 0.1
 }
@@ -61,9 +61,6 @@ def process_data(row, max_retries=10):
             image = load_image_from_url(graph)
 
             prompt = f"""
-            image: "{graph}"
-            Essay title: "{question}"
-            Student's essay: "{essay}"
             Assume you are an IELTS examiner. You need to score the lexical diversity in the student's essay.
             Based on the IELTS Writing Task 1 text prompt and image prompt, as well as the student's essay, please assign a score (0-5) according to the criteria in the rubric. The output should be only the score.
             [Rubric]: 
@@ -73,7 +70,11 @@ def process_data(row, max_retries=10):
                     2 - Vocabulary is fairly limited, with a lot of repetition and restricted word choice. 
                     1 - Vocabulary is very limited, with frequent repetition and an extremely narrow range of words. 
                     0 - Vocabulary is monotonous, with almost no variation, failing to demonstrate vocabulary diversity.
-                    Please output only the number of the score (e.g. 5)：
+            Below is the reference content:
+            image: "{graph}"
+            Essay title: "{question}"
+            Student's essay: "{essay}"
+            Please output only the number of the score (e.g. 5):
             """
 
             response = model.chat(
